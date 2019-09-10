@@ -1,12 +1,13 @@
 from docx import Document
-
+from docx.oxml.ns import nsdecls
+from docx.oxml import parse_xml
 
 def create_doc(department,account_num,s_5hr,s_10hr,p_10hr,p_12hr,p_15hr,total_primary,thanksgiving_hours,spring_hours,christmas_hours,summer_hours):
     document = Document()
 
     # Table Layout
     table = document.add_table(rows = 4, cols = 12)
-    table.allow_autofit = False
+    table.allow_autofit = True
     table.style = 'TableGrid'
 
     # Merging Selected Cells
@@ -46,12 +47,35 @@ def create_doc(department,account_num,s_5hr,s_10hr,p_10hr,p_12hr,p_15hr,total_pr
     table.cell(3,10).text = str(christmas_hours)
     table.cell(3,11).text = str(summer_hours)
 
+    # Coloring Cells
+    table.rows[0].cells[0]._tc.get_or_add_tcPr().append(parse_xml(r'<w:shd {} w:fill="939393"/>'.format(nsdecls('w'))))
+
+    table.rows[1].cells[2]._tc.get_or_add_tcPr().append(parse_xml(r'<w:shd {} w:fill="51B5D8"/>'.format(nsdecls('w'))))
+    table.rows[2].cells[2]._tc.get_or_add_tcPr().append(parse_xml(r'<w:shd {} w:fill="51B5D8"/>'.format(nsdecls('w'))))
+    table.rows[2].cells[3]._tc.get_or_add_tcPr().append(parse_xml(r'<w:shd {} w:fill="51B5D8"/>'.format(nsdecls('w'))))
+    table.rows[3].cells[2]._tc.get_or_add_tcPr().append(parse_xml(r'<w:shd {} w:fill="51B5D8"/>'.format(nsdecls('w'))))
+    table.rows[3].cells[3]._tc.get_or_add_tcPr().append(parse_xml(r'<w:shd {} w:fill="51B5D8"/>'.format(nsdecls('w'))))
+
+    table.rows[1].cells[4]._tc.get_or_add_tcPr().append(parse_xml(r'<w:shd {} w:fill="F0B27A"/>'.format(nsdecls('w'))))
+    table.rows[2].cells[4]._tc.get_or_add_tcPr().append(parse_xml(r'<w:shd {} w:fill="F0B27A"/>'.format(nsdecls('w'))))
+    table.rows[2].cells[5]._tc.get_or_add_tcPr().append(parse_xml(r'<w:shd {} w:fill="F0B27A"/>'.format(nsdecls('w'))))
+    table.rows[2].cells[6]._tc.get_or_add_tcPr().append(parse_xml(r'<w:shd {} w:fill="F0B27A"/>'.format(nsdecls('w'))))
+    table.rows[3].cells[4]._tc.get_or_add_tcPr().append(parse_xml(r'<w:shd {} w:fill="F0B27A"/>'.format(nsdecls('w'))))
+    table.rows[3].cells[5]._tc.get_or_add_tcPr().append(parse_xml(r'<w:shd {} w:fill="F0B27A"/>'.format(nsdecls('w'))))
+    table.rows[3].cells[6]._tc.get_or_add_tcPr().append(parse_xml(r'<w:shd {} w:fill="F0B27A"/>'.format(nsdecls('w'))))
+
+    table.rows[2].cells[7]._tc.get_or_add_tcPr().append(parse_xml(r'<w:shd {} w:fill="52BE80"/>'.format(nsdecls('w'))))
+    table.rows[3].cells[7]._tc.get_or_add_tcPr().append(parse_xml(r'<w:shd {} w:fill="52BE80"/>'.format(nsdecls('w'))))
+
+    table.rows[3].cells[0]._tc.get_or_add_tcPr().append(parse_xml(r'<w:shd {} w:fill="#F7DC6F"/>'.format(nsdecls('w'))))
+
+
     document.save('%s-Allocation-AY19-20.docx' % department)
 
 
 
 def main():
-    pass
+    create_doc('admissions','123',0,0,0,0,0,0,0,0,0,0)
 
 if __name__=="__main__":
     main()
