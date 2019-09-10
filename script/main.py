@@ -1,3 +1,4 @@
+import pandas
 from docx import Document
 from docx.oxml.ns import nsdecls
 from docx.oxml import parse_xml
@@ -70,12 +71,29 @@ def create_doc(department,account_num,s_5hr,s_10hr,p_10hr,p_12hr,p_15hr,total_pr
     table.rows[3].cells[0]._tc.get_or_add_tcPr().append(parse_xml(r'<w:shd {} w:fill="#F7DC6F"/>'.format(nsdecls('w'))))
 
 
-    document.save('%s-Allocation-AY19-20.docx' % department)
+    document.save('%s-Allocation-AY19-20.docx' % department[0:4])
 
+def extract_data(dataframe,i):
+    department = dataframe['Department'][i]
+    account_num = dataframe['Account Number'][i]
+    s_5hr = dataframe['5hr S'][i]
+    s_10hr = dataframe['10hr S'][i]
+    p_10hr = dataframe['10hr P'][i]
+    p_12hr = dataframe['12hr P'][i]
+    p_15hr = dataframe['15hr P'][i]
+    total_primary = dataframe['Total Primary Positions'][i]
+    thanksgiving_hours = dataframe['ThG BRK'][i]
+    spring_hours = dataframe['SP BRK'][i]
+    christmas_hours = dataframe['Xmas BRK'][i]
+    summer_hours = dataframe['Summer Hours'][i]
 
+    return department,account_num,s_5hr,s_10hr,p_10hr,p_12hr,p_15hr,total_primary,thanksgiving_hours,spring_hours,christmas_hours,summer_hours
 
 def main():
-    create_doc('admissions','123',0,0,0,0,0,0,0,0,0,0)
+    df = pandas.read_excel("allocations.xlsx")
+    for i in range(124):
+        department, account_num, s_5hr, s_10hr, p_10hr,p_12hr,p_15hr,total_primary,thanksgiving_hours,spring_hours,christmas_hours,summer_hours = extract_data(df,i)
+        create_doc(department, account_num, s_5hr, s_10hr, p_10hr,p_12hr,p_15hr,total_primary,thanksgiving_hours,spring_hours,christmas_hours,summer_hours)
 
 if __name__=="__main__":
     main()
