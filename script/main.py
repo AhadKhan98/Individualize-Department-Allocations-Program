@@ -3,12 +3,11 @@ from docx import Document
 from docx.oxml.ns import nsdecls
 from docx.oxml import parse_xml
 
-def create_doc(department,account_num,s_5hr,s_10hr,p_10hr,p_12hr,p_15hr,total_primary,thanksgiving_hours,spring_hours,christmas_hours,summer_hours):
+def create_doc(department,account_num,s_5hr,s_10hr,p_10hr,p_12hr,p_15hr,total_primary,thanksgiving_hours,spring_hours,christmas_hours,summer_hours,i):
     document = Document()
 
     # Table Layout
     table = document.add_table(rows = 4, cols = 12)
-    table.allow_autofit = True
     table.style = 'TableGrid'
 
     # Merging Selected Cells
@@ -71,29 +70,59 @@ def create_doc(department,account_num,s_5hr,s_10hr,p_10hr,p_12hr,p_15hr,total_pr
     table.rows[3].cells[0]._tc.get_or_add_tcPr().append(parse_xml(r'<w:shd {} w:fill="#F7DC6F"/>'.format(nsdecls('w'))))
 
 
-    document.save('%s-Allocation-AY19-20.docx' % department[0:4])
+    document.save('%sAllocation-AY1920-%s.docx' % (department[0:8],i))
 
 def extract_data(dataframe,i):
     department = dataframe['Department'][i]
     account_num = dataframe['Account Number'][i]
-    s_5hr = dataframe['5hr S'][i]
-    s_10hr = dataframe['10hr S'][i]
-    p_10hr = dataframe['10hr P'][i]
-    p_12hr = dataframe['12hr P'][i]
-    p_15hr = dataframe['15hr P'][i]
-    total_primary = dataframe['Total Primary Positions'][i]
-    thanksgiving_hours = dataframe['ThG BRK'][i]
-    spring_hours = dataframe['SP BRK'][i]
-    christmas_hours = dataframe['Xmas BRK'][i]
-    summer_hours = dataframe['Summer Hours'][i]
+    try:
+        s_5hr = int(dataframe['5hr S'][i])
+    except ValueError:
+        s_5hr = 0
+    try:
+        s_10hr = int(dataframe['10hr S'][i])
+    except ValueError:
+        s_10hr = 0
+    try:
+        p_10hr = int(dataframe['10hr P'][i])
+    except ValueError:
+        p_10hr = 0
+    try:
+        p_12hr = int(dataframe['12hr P'][i])
+    except ValueError:
+        p_12hr = 0
+    try:
+        p_15hr = int(dataframe['15hr P'][i])
+    except ValueError:
+        p_15hr = 0
+    try:
+        total_primary = int(dataframe['Total Primary Positions'][i])
+    except ValueError:
+        total_primary = 0
+    try:
+        thanksgiving_hours = int(dataframe['ThG BRK'][i])
+    except ValueError:
+        thanksgiving_hours = 0
+    try:
+        spring_hours = int(dataframe['SP BRK'][i])
+    except ValueError:
+        spring_hours = 0
+    try:
+        christmas_hours = int(dataframe['Xmas BRK'][i])
+    except ValueError:
+        christmas_hours = 0
+    try:
+        summer_hours = int(dataframe['Summer Hours'][i])
+    except ValueError:
+        summer_hours = 0
 
     return department,account_num,s_5hr,s_10hr,p_10hr,p_12hr,p_15hr,total_primary,thanksgiving_hours,spring_hours,christmas_hours,summer_hours
 
 def main():
     df = pandas.read_excel("allocations.xlsx")
-    for i in range(124):
+    for i in range(len(df['Account Number'])):
         department, account_num, s_5hr, s_10hr, p_10hr,p_12hr,p_15hr,total_primary,thanksgiving_hours,spring_hours,christmas_hours,summer_hours = extract_data(df,i)
-        create_doc(department, account_num, s_5hr, s_10hr, p_10hr,p_12hr,p_15hr,total_primary,thanksgiving_hours,spring_hours,christmas_hours,summer_hours)
+        create_doc(department, account_num, s_5hr, s_10hr, p_10hr,p_12hr,p_15hr,total_primary,thanksgiving_hours,spring_hours,christmas_hours,summer_hours,i)
 
 if __name__=="__main__":
     main()
