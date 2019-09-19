@@ -119,10 +119,19 @@ def extract_data(dataframe,i):
     return department,account_num,s_5hr,s_10hr,p_10hr,p_12hr,p_15hr,total_primary,thanksgiving_hours,spring_hours,christmas_hours,summer_hours
 
 def main():
-    df = pandas.read_excel("allocations.xlsx")
+    welcome_message = (
+    "Welcome to the Department Allocations Program."
+    "\n\nPurpose: Given an excel sheet containing department allocations, the program generates a .dockx file containing data in a table, for each department."
+    "In order for the program to work, the allocations spreadsheet MUST HAVE the following columns: \n1) Department \n2) Account Number \n3) 5hr S \n4) 10hr S \n5) 10hr P"
+    "\n6) 12hr P \n7) 15hr P \n8) Total Primary Positions \n9) ThG BRK \n10) SP BRK \n11) Xmas BRK \n12) Summer Hours"
+    )
+    print(welcome_message)
+    filename = input("\n\nPlease enter filename for allocations sheet: ")
+    df = pandas.read_excel(filename)
     for i in range(len(df['Account Number'])):
         department, account_num, s_5hr, s_10hr, p_10hr,p_12hr,p_15hr,total_primary,thanksgiving_hours,spring_hours,christmas_hours,summer_hours = extract_data(df,i)
         create_doc(department, account_num, s_5hr, s_10hr, p_10hr,p_12hr,p_15hr,total_primary,thanksgiving_hours,spring_hours,christmas_hours,summer_hours,i)
+        print()
 
 if __name__=="__main__":
     main()
