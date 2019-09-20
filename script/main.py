@@ -3,7 +3,7 @@ from docx import Document
 from docx.oxml.ns import nsdecls
 from docx.oxml import parse_xml
 
-def create_doc(department,account_num,s_5hr,s_10hr,p_10hr,p_12hr,p_15hr,total_primary,thanksgiving_hours,spring_hours,christmas_hours,summer_hours,i):
+def create_doc(ay,department,account_num,s_5hr,s_10hr,p_10hr,p_12hr,p_15hr,total_primary,thanksgiving_hours,spring_hours,christmas_hours,summer_hours,i):
     document = Document()
 
     # Table Layout
@@ -32,10 +32,13 @@ def create_doc(department,account_num,s_5hr,s_10hr,p_10hr,p_12hr,p_15hr,total_pr
     table.cell(2,9).text = "Spring Hours"
     table.cell(2,10).text = "Christmas Hours"
     table.cell(2,11).text = "Summer Hours"
-    table.cell(3,0).text = "Final Allocation on AY 19-20"
+    table.cell(3,0).text = "Final Allocation on AY %s" % ay
 
     # Setting Table Data
-    table.cell(0,0).text = department + " (" + str(account_num) + ")"
+    try:
+        table.cell(0,0).text = department + " (" + str(account_num) + ")"
+    except TypeError:
+        pass
     table.cell(3,2).text = str(s_5hr)
     table.cell(3,3).text = str(s_10hr)
     table.cell(3,4).text = str(p_10hr)
@@ -69,8 +72,12 @@ def create_doc(department,account_num,s_5hr,s_10hr,p_10hr,p_12hr,p_15hr,total_pr
 
     table.rows[3].cells[0]._tc.get_or_add_tcPr().append(parse_xml(r'<w:shd {} w:fill="#F7DC6F"/>'.format(nsdecls('w'))))
 
+    try:
+        document.save('%sAllocation-AY1920-%s.docx' % (department[0:8],i))
+        print('%sAllocation-AY%s-%s.docx created successfully.' % (department[0:8],ay,i))
+    except:
+        pass
 
-    document.save('%sAllocation-AY1920-%s.docx' % (department[0:8],i))
 
 def extract_data(dataframe,i):
     department = dataframe['Department'][i]
@@ -127,10 +134,11 @@ def main():
     )
     print(welcome_message)
     filename = input("\n\nPlease enter filename for allocations sheet: ")
+    ay = input("Enter Academic Year (e.g: 19-20)")
     df = pandas.read_excel(filename)
     for i in range(len(df['Account Number'])):
         department, account_num, s_5hr, s_10hr, p_10hr,p_12hr,p_15hr,total_primary,thanksgiving_hours,spring_hours,christmas_hours,summer_hours = extract_data(df,i)
-        create_doc(department, account_num, s_5hr, s_10hr, p_10hr,p_12hr,p_15hr,total_primary,thanksgiving_hours,spring_hours,christmas_hours,summer_hours,i)
+        create_doc(ay,department, account_num, s_5hr, s_10hr, p_10hr,p_12hr,p_15hr,total_primary,thanksgiving_hours,spring_hours,christmas_hours,summer_hours,i)
         print()
 
 if __name__=="__main__":
