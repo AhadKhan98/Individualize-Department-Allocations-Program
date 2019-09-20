@@ -1,0 +1,11 @@
+{
+  "base_url": "/",
+  "hostname": "localhost",
+  "notebook_dir": "C:\\Users\\zaia\\Desktop\\Split-Steal-Game",
+  "password": false,
+  "pid": 10020,
+  "port": 8888,
+  "secure": false,
+  "token": "63d67a4c83eda90ed9d392f7658a8832387ce8bc44cca4fe",
+  "url": "http://localhost:8888/"
+}

@@ -1,0 +1,11 @@
+{
+  "base_url": "/",
+  "hostname": "localhost",
+  "notebook_dir": "C:\\Users\\zaia\\Desktop\\Intern\\Projects\\Diabetes\\Disease Diagnosis Script",
+  "password": false,
+  "pid": 6008,
+  "port": 8892,
+  "secure": false,
+  "token": "9c5b90e95d2e1e1523eefad18c08de6def2b6f98e11368c2",
+  "url": "http://localhost:8892/"
+}
